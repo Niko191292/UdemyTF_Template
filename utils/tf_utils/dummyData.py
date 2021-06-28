@@ -31,5 +31,6 @@ def regression_data() -> Tuple[np.ndarray, np.ndarray]:
     y = f(x) + np.random.normal(scale=2.0, size=100)
     return x, y
 
+
 if __name__ == "__main__":
     x, y = classification_data()
