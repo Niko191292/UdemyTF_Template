@@ -23,6 +23,7 @@ def softmax(y_pred: np.ndarray) -> np.ndarray:
         probabilities[i] = exps / np.sum(exps)
     return probabilities
 
+
 # Bildet die Fehlerfunktion
 def cross_entropy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     num_samples = y_true.shape[0]
@@ -43,6 +44,6 @@ if __name__ == "__main__":
     y_pred = softmax(y_logits)
     print(y_pred)
 
-    #Wahrscheinlichkeitsverteilung vergleichen
+    # Wahrscheinlichkeitsverteilung vergleichen
     loss = cross_entropy(y_true, y_pred)
     print(loss)
