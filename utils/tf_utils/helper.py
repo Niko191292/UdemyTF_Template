@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import cm
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.ticker import LinearLocator
 from mpl_toolkits.mplot3d.axes3d import Axes3D
+from matplotlib import cm
 
 
 def f(x0, x1):
@@ -35,7 +35,7 @@ def plot_rosenbrock(x_start, gradient_steps=None):
     # Rosenbrock function w/ two parameters using numpy Arrays
     Z = f(X, Y)
 
-    surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, linewidth=0, alpha=0.8, cmap=cm.coolwarm)
+    surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, linewidth=0, alpha=0.8, cmap=cm.get_cmap("coolwarm"))
     # Global minimum
     ax.scatter(1, 1, f(1, 1), color="red", marker="*", s=200)
     # Starting point
