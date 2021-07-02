@@ -6,6 +6,20 @@ from tensorflow.keras.initializers import RandomUniform
 from tensorflow.keras.layers import Activation
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.models import Sequential
+from tensorflow.python.ops.math_ops import reduce_sum
+
+
+def r_squared(y_true: tf.Tensor, y_pred: tf.Tensor) -> tf.Tensor:
+    error = tf.math.subtract(y_true, y_pred)
+    squared_err = tf.math.square(error)
+    numerator = tf.math.reduce_sum(squared_err)
+    y_true_mean = tf.math.reduce_mean(y_true)
+    mean_dev = tf.math.subtract(y_true, y_true_mean)
+    squared_mean_dev = tf.math.square(mean_dev)
+    denominator = tf.reduce_sum(squared_mean_dev)
+    r2 = tf.math.subtract(1.0, tf.math.divide(numerator, denominator))
+    r2_clipped = tf.clip_by_value(r2, clip_value_min=0.0, clip_value_max=1.0)
+    return r2_clipped
 
 
 def build_model(num_features: int, num_targets: int) -> Sequential:
@@ -40,4 +54,31 @@ if __name__ == "__main__":
     num_features = x_train.shape[1]
     num_targets = y_train.shape[1]
 
-    model = build_model(num_features=num_features, num_targets=num_targets)
+    model = build_model(num_features=num_features, num_targets=num_targets) # 1 Model erstellen
+
+    adam = tf.keras.optimizers.Adam(
+        learning_rate=0.05
+    )
+
+    model.compile( # 2 Compiling
+        loss="mse", # Mean Squared Error
+        optimizer=adam,
+        metrics=[r_squared]
+    )
+
+    model.fit( # 3 Training durchführen
+        x=x_train,
+        y=y_train,
+        epochs=5_000,
+        batch_size=128,
+        verbose=1,
+        validation_data=(x_test, y_test)
+    )
+
+    scores = model.evaluate( # 4 Model testen
+        x=x_test,
+        y=y_test,
+        verbose=0
+    )
+
+    print(scores)
