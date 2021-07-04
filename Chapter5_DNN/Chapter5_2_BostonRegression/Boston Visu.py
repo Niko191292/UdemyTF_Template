@@ -2,6 +2,7 @@ import pandas as pd # Excel für Python
 from sklearn.datasets import load_boston
 import matplotlib.pyplot as plt
 
+
 dataset = load_boston()
 x = dataset.data
 y = dataset.target
