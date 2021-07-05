@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.initializers import Constant
@@ -7,6 +8,9 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.optimizers import Adam
+
+MODELS_DIR = os.path.abspath("C:/Users/nikol/UdemyTF_Template/models")
+MODEL_FILE_PATH = os.path.join(MODELS_DIR, "mnist_model.h5")
 
 
 def prepare_dataset(num_features: int, num_targets: int):
@@ -79,4 +83,18 @@ if __name__ == "__main__":
         verbose=0
     )
 
-    print(scores)
+    print(f"Scores before saving: {scores}")
+
+    # Speichern der Gewichte des Models
+    model.save_weights(filepath=MODEL_FILE_PATH)
+    # Laden der Gewichte
+    model.load_weights(filepath=MODEL_FILE_PATH)
+
+    scores = model.evaluate( # 4 Model testen
+        x=x_test,
+        y=y_test,
+        verbose=0
+    )
+
+    print(f"Scores after loading: {scores}")
+

@@ -5,6 +5,11 @@
 !requirements.txt
 !.gitkeep
 *.h5
+# By Nikolai Isken, do not track the Log Files
+*.gz
+*.v2
+*.pb
+*.profile-empty
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

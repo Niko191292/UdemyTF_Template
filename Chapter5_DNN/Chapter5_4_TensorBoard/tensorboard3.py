@@ -1,4 +1,6 @@
+import os
 import numpy as np
+from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.initializers import Constant
 from tensorflow.keras.initializers import TruncatedNormal
@@ -7,6 +9,16 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.optimizers import Adam
+from tf_utils.callbacks import ConfusionMatrix
+
+MODELS_DIR = os.path.abspath("C:/Users/nikol/UdemyTF_Template/models")
+if not os.path.exists(MODELS_DIR):
+    os.mkdir(MODELS_DIR)
+MODEL_FILE_PATH = os.path.join(MODELS_DIR, "mnist_model.h5")
+LOGS_DIR = os.path.abspath("C:/Users/nikol/UdemyTF_Template/logs")
+if not os.path.exists(MODELS_DIR):
+    os.mkdir(MODELS_DIR)
+MODEL_LOG_DIR = os.path.join(LOGS_DIR, "mnist_model_log")
 
 
 def prepare_dataset(num_features: int, num_targets: int):
@@ -64,13 +76,30 @@ if __name__ == "__main__":
         metrics=["accuracy"]
     )
 
+    tb_callback = TensorBoard(
+        log_dir=MODEL_LOG_DIR,
+        histogram_freq=1,
+        write_graph=True
+    )
+
+    classes_list = [class_idx for class_idx in range(num_targets)]
+
+    cm_callback = ConfusionMatrix(
+        model,
+        x_test,
+        y_test,
+        classes_list=classes_list,
+        log_dir=MODEL_LOG_DIR
+    )
+
     model.fit( # 3 Training durchführen
         x=x_train,
         y=y_train,
         epochs=5,
         batch_size=128,
         verbose=1,
-        validation_data=(x_test, y_test)
+        validation_data=(x_test, y_test),
+        callbacks=[tb_callback, cm_callback]
     )
 
     scores = model.evaluate( # 4 Model testen
@@ -79,4 +108,4 @@ if __name__ == "__main__":
         verbose=0
     )
 
-    print(scores)
+    print(f"Scores before saving: {scores}")
