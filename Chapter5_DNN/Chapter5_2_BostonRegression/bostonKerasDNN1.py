@@ -6,7 +6,7 @@ from tensorflow.keras.initializers import RandomUniform
 from tensorflow.keras.layers import Activation
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.models import Sequential
-from tensorflow.python.ops.math_ops import reduce_sum
+# from tensorflow.python.ops.math_ops import reduce_sum
 
 
 def r_squared(y_true: tf.Tensor, y_pred: tf.Tensor) -> tf.Tensor:
