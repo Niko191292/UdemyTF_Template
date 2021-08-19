@@ -12,4 +12,3 @@ class Car:
 
 my_car = Car("Porsche 911", 2019, 400)
 my_car.print_car()
-

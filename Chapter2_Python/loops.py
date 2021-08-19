@@ -12,4 +12,3 @@ for idx in range(1, 10, 2):
 
 for grade in grades:
     print(grade)
-
