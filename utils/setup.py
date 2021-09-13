@@ -12,9 +12,9 @@ Operating System :: Unix
 Operating System :: MacOS
 """
 
-DISTNAME = "tf_utils"
-AUTHOR = "Jan Schaffranek"
-DESCRIPTION = "Helper functions for the udemy course."
+DISTNAME = "op_utils"
+AUTHOR = "Nikolai Isken"
+DESCRIPTION = "Helper functions."
 
 MAJOR = 0
 MINOR = 1
