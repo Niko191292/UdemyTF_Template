@@ -1,6 +1,5 @@
 from typing import Tuple
 import numpy as np
-from numpy.core.fromnumeric import size
 import tensorflow as tf
 from tensorflow.keras.initializers import Constant
 from tensorflow.keras.initializers import RandomUniform
@@ -10,8 +9,11 @@ from tensorflow.keras.models import Sequential
 import os
 
 # Step function as activation function
+
+
 def step(x: tf.Tensor) -> tf.Tensor:
     return tf.where(tf.greater(x, 0), tf.ones_like(x), tf.zeros_like(x))
+
 
 def get_dataset() -> Tuple[np.ndarray, np.ndarray]:
     """AND-Function dataset"""
@@ -34,8 +36,6 @@ def build_model(num_features: int, num_targets: int) -> Sequential:
     return model
 
 
-
-
 if __name__ == "__main__":
     x, y = get_dataset()
 
@@ -43,26 +43,20 @@ if __name__ == "__main__":
     num_targets = 1
     learning_rate = 0.01
 
-
-
-
-
     model = build_model(num_features=num_feature, num_targets=num_targets)
-    optimizer = tf.optimizers.SGD(learning_rate=learning_rate) # Passt die Gewichte im Training an
+    optimizer = tf.optimizers.SGD(learning_rate=learning_rate)  # Passt die Gewichte im Training an
     loss = tf.keras.losses.MeanAbsoluteError()
     metric = tf.keras.metrics.BinaryAccuracy()
-
-    #w = tf.Variable(tf.random_normal([3, 1]))
 
     model.compile(optimizer=optimizer, loss=loss, metrics=[metric])
 
     LOGS_DIR = os.path.abspath("C:/Users/nikol/UdemyTF_Template/logs")
     MODEL_LOG_DIR = os.path.join(LOGS_DIR, "AND_SLP")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(
-        log_dir=MODEL_LOG_DIR, 
+        log_dir=MODEL_LOG_DIR,
         histogram_freq=1,
         write_graph=True
-        )
+    )
 
     model.fit(
         x=x,
@@ -73,7 +67,7 @@ if __name__ == "__main__":
         callbacks=[tensorboard_callback]
     )
 
-    scores = model.evaluate( # 4 Model testen
+    scores = model.evaluate(  # 4 Model testen
         x=x,
         y=y,
         verbose=0
