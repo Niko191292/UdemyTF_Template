@@ -1,13 +1,10 @@
 import numpy as np
 from typing import Tuple
-from tensorflow.keras.datasets import mnist
-from tensorflow.keras.layers import Activation
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Conv2D
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.optimizers import Adam
-from tensorflow.python.keras.backend import conv2d
+from keras.datasets import mnist
+from keras.layers import Activation, Dense, Conv2D
+from keras.models import Sequential
+from keras.utils import to_categorical
+from keras.optimizers import Adam
 from tensorflow.python.keras.layers.core import Flatten
 from tensorflow.python.keras.layers.pooling import MaxPooling2D
 
@@ -46,17 +43,17 @@ if __name__ == "__main__":
     img_shape = (28, 28, 1)
     num_classes = 10
 
-    (x_train, y_train), (x_test, y_test) = prepare_dataset(img_shape, num_classes)
+    (x_train, y_train), (x_test, y_test) = prepare_dataset(num_classes)
 
-    model = build_model(img_shape=img_shape, num_classes=num_classes) # 1 Model erstellen
+    model = build_model(img_shape=img_shape, num_classes=num_classes)  # 1 Model erstellen
 
-    model.compile( # 2 Compiling
-        loss="categorical_crossentropy", # Für mehr als zwei Klassen
+    model.compile(  # 2 Compiling
+        loss="categorical_crossentropy",  # Für mehr als zwei Klassen
         optimizer=Adam(learning_rate=0.0005),
         metrics=["accuracy"]
     )
 
-    model.fit( # 3 Training durchführen
+    model.fit(  # 3 Training durchführen
         x=x_train,
         y=y_train,
         epochs=5,
@@ -65,7 +62,7 @@ if __name__ == "__main__":
         validation_data=(x_test, y_test)
     )
 
-    scores = model.evaluate( # 4 Model testen
+    scores = model.evaluate(  # 4 Model testen
         x=x_test,
         y=y_test,
         verbose=0
