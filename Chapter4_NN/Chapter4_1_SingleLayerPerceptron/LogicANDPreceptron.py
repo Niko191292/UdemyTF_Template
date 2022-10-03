@@ -50,11 +50,9 @@ if __name__ == "__main__":
     learning_rate = 0.01
 
     model = build_model(num_features=num_feature, num_targets=num_targets)
-    optimizer = tf.optimizers.SGD(learning_rate=learning_rate) # Passt die Gewichte im Training an
+    optimizer = tf.optimizers.SGD(learning_rate=learning_rate)  # Passt die Gewichte im Training an
     loss = tf.keras.losses.MeanAbsoluteError()
     metric = tf.keras.metrics.BinaryAccuracy()
-
-    #w = tf.Variable(tf.random_normal([3, 1]))
 
     model.compile(optimizer=optimizer, loss=loss, metrics=[metric])
 
