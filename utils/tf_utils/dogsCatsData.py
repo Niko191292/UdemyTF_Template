@@ -6,8 +6,8 @@ import numpy as np
 import tensorflow as tf
 from skimage import transform
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.utils import to_categorical
+from keras.preprocessing.image import ImageDataGenerator
+from keras.utils import to_categorical
 
 
 np.random.seed(0)
@@ -39,14 +39,9 @@ def extract_cats_vs_dogs() -> None:
     num_dogs = len(os.listdir(dogs_dir))
     num_images = num_cats + num_dogs
 
-    x = np.zeros(
-        shape=(num_images, IMG_SIZE, IMG_SIZE, IMG_DEPTH),
-        dtype=np.float32
-    )
-    y = np.zeros(
-        shape=(num_images,),
-        dtype=np.float32
-    )
+    x = np.zeros(shape=(num_images, IMG_SIZE, IMG_SIZE,
+                 IMG_DEPTH), dtype=np.float32)
+    y = np.zeros(shape=(num_images,), dtype=np.float32)
 
     cnt = 0
     for d, class_name in zip(dirs, class_names):
@@ -55,10 +50,7 @@ def extract_cats_vs_dogs() -> None:
             try:
                 img = cv2.imread(img_file_path, cv2.IMREAD_COLOR)
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                x[cnt] = transform.resize(
-                    image=img,
-                    output_shape=IMG_SHAPE
-                )
+                x[cnt] = transform.resize(image=img, output_shape=IMG_SHAPE)
                 if class_name == "cat":
                     y[cnt] = 0
                 elif class_name == "dog":
@@ -87,8 +79,11 @@ class DOGSCATS:
         x = np.load(X_FILE_PATH)
         y = np.load(Y_FILE_PATH)
         # Split the dataset
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size)
-        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=validation_size)
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y, test_size=test_size)
+        x_train, x_val, y_train, y_val = train_test_split(
+            x_train, y_train, test_size=validation_size
+        )
         # Preprocess x data
         self.x_train = x_train.astype(np.float32)
         self.x_test = x_test.astype(np.float32)
@@ -119,10 +114,7 @@ class DOGSCATS:
     def load_and_preprocess_custom_image(image_file_path: str) -> np.ndarray:
         img = cv2.imread(image_file_path, cv2.IMREAD_COLOR)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img = transform.resize(
-            image=img,
-            output_shape=IMG_SHAPE
-        )
+        img = transform.resize(image=img, output_shape=IMG_SHAPE)
         return img
 
     def data_augmentation(self, augment_size: int = 5_000) -> None:
@@ -130,7 +122,7 @@ class DOGSCATS:
             rotation_range=5,
             zoom_range=0.08,
             width_shift_range=0.08,
-            height_shift_range=0.08
+            height_shift_range=0.08,
         )
         # Fit the data generator
         image_generator.fit(self.x_train, augment=True)
@@ -142,7 +134,7 @@ class DOGSCATS:
             x_augmented,
             np.zeros(augment_size),
             batch_size=augment_size,
-            shuffle=False
+            shuffle=False,
         ).next()[0]
         # Append the augmented images to the train set
         self.x_train = np.concatenate((self.x_train, x_augmented))

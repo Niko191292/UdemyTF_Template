@@ -1,13 +1,30 @@
+import requests
+
+
+requests.packages.urllib3.disable_warnings()
+import ssl
+
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    # Legacy Python that doesn't verify HTTPS certificates by default
+    pass
+else:
+    # Handle target environment that doesn't support HTTPS verification
+    ssl._create_default_https_context = _create_unverified_https_context
+
+
 import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.layers.experimental.preprocessing import RandomRotation
-from tensorflow.keras.layers.experimental.preprocessing import RandomTranslation
-from tensorflow.keras.layers.experimental.preprocessing import RandomZoom
-from tensorflow.keras.layers.experimental.preprocessing import Rescaling
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.utils import to_categorical
+from keras.datasets import cifar10
+from keras.layers.experimental.preprocessing import RandomRotation
+from keras.layers.experimental.preprocessing import RandomTranslation
+from keras.layers.experimental.preprocessing import RandomZoom
+from keras.layers.experimental.preprocessing import Rescaling
+from keras.models import Sequential
+from keras.utils import to_categorical
 
 
 np.random.seed(0)
@@ -22,7 +39,9 @@ class CIFAR10:
         # Load the data set
         (x_train, y_train), (x_test, y_test) = cifar10.load_data()
         # Split the dataset
-        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=validation_size)
+        x_train, x_val, y_train, y_val = train_test_split(
+            x_train, y_train, test_size=validation_size
+        )
         # Preprocess x data
         self.x_train = x_train.astype(np.float32)
         self.x_test = x_test.astype(np.float32)
@@ -40,10 +59,14 @@ class CIFAR10:
         self.depth = self.x_train.shape[3]
         self.img_shape = (self.width, self.height, self.depth)
         # tf.data Datasets
-        self.train_dataset = tf.data.Dataset.from_tensor_slices((self.x_train, self.y_train))
-        self.test_dataset = tf.data.Dataset.from_tensor_slices((self.x_test, self.y_test))
-        self.val_dataset = tf.data.Dataset.from_tensor_slices((self.x_val, self.y_val))
-        self.train_dataset = self._prepare_dataset(self.train_dataset, shuffle=True, augment=True)
+        self.train_dataset = tf.data.Dataset.from_tensor_slices(
+            (self.x_train, self.y_train))
+        self.test_dataset = tf.data.Dataset.from_tensor_slices(
+            (self.x_test, self.y_test))
+        self.val_dataset = tf.data.Dataset.from_tensor_slices(
+            (self.x_val, self.y_val))
+        self.train_dataset = self._prepare_dataset(
+            self.train_dataset, shuffle=True, augment=True)
         self.test_dataset = self._prepare_dataset(self.test_dataset)
         self.val_dataset = self._prepare_dataset(self.val_dataset)
 
@@ -78,12 +101,12 @@ class CIFAR10:
         self,
         dataset: tf.data.Dataset,
         shuffle: bool = False,
-        augment: bool = False
+        augment: bool = False,
     ) -> tf.data.Dataset:
         preprocessing_model = self._build_preprocessing()
         dataset = dataset.map(
             map_func=lambda x, y: (preprocessing_model(x, training=False), y),
-            num_parallel_calls=tf.data.experimental.AUTOTUNE
+            num_parallel_calls=tf.data.experimental.AUTOTUNE,
         )
 
         if shuffle:
@@ -94,8 +117,11 @@ class CIFAR10:
         if augment:
             data_augmentation_model = self._build_data_augmentation()
             dataset = dataset.map(
-                map_func=lambda x, y: (data_augmentation_model(x, training=False), y),
-                num_parallel_calls=tf.data.experimental.AUTOTUNE
+                map_func=lambda x, y: (
+                    data_augmentation_model(x, training=False),
+                    y,
+                ),
+                num_parallel_calls=tf.data.experimental.AUTOTUNE,
             )
 
         return dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)

@@ -1,18 +1,19 @@
 from typing import Tuple
+from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
-from tensorflow.keras.layers import Activation
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
+from keras.layers import Activation
+from keras.layers import Dense
+from keras.models import Sequential
+from keras.optimizers import Adam
 
 
-def f(x: float) -> float:
-    return x ** 2 + x + 10
+def f(x: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+    return x**2 + x + 10
 
 
-def relu(x: float) -> float:
+def relu(x: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
     if x > 0:
         return x
     else:
@@ -21,27 +22,24 @@ def relu(x: float) -> float:
 
 def get_dataset() -> Tuple[np.ndarray, np.ndarray]:
     x = np.linspace(start=-10.0, stop=10.0, num=1000).reshape(-1, 1)
-    y = f(x)
-    return x, y
+    y = f(x)  # type: ignore
+    return x, y  # type: ignore
 
 
 def build_model() -> Sequential:
     model = Sequential()
-    model.add(Dense(12))  # Input zu Hidden
+    model.add(Dense(units=12))  # Input zu Hidden
     model.add(Activation("relu"))  # ReLU vom Hidden
-    model.add(Dense(1))  # Vom Hidden zum Output
+    model.add(Dense(units=1))  # Vom Hidden zum Output
     return model
 
 
-if __name__ == "__main__":
+def main() -> None:
     x, y = get_dataset()
 
     model = build_model()
 
-    model.compile(
-        optimizer=Adam(learning_rate=5e-2),
-        loss="mse"
-    )
+    model.compile(optimizer=Adam(learning_rate=5e-2), loss="mse")
     model.fit(x, y, epochs=20)
 
     W, b = model.layers[0].get_weights()
@@ -67,3 +65,7 @@ if __name__ == "__main__":
         ax2.plot(x, y_relu.T[-1])
         plt.show()
         plt.close()
+
+
+if __name__ == "__main__":
+    main()

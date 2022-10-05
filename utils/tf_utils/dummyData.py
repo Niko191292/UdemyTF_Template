@@ -30,5 +30,5 @@ def classification_data() -> Tuple[np.ndarray, np.ndarray]:
 def regression_data() -> Tuple[np.ndarray, np.ndarray]:
     N = 100
     x = np.random.uniform(low=-10.0, high=10.0, size=N)
-    y = f(x) + np.random.normal(scale=2.0, size=100)
+    y = f(x) + np.random.normal(scale=2.0, size=100)  # type: ignore
     return x, y

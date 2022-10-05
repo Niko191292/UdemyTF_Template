@@ -22,7 +22,9 @@ class MNIST:
         # Load the data set
         (x_train, y_train), (x_test, y_test) = mnist.load_data()
         # Split the dataset
-        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=validation_size)
+        x_train, x_val, y_train, y_val = train_test_split(
+            x_train, y_train, test_size=validation_size
+        )
         # Preprocess x data
         self.x_train = np.expand_dims(x_train, axis=-1).astype(np.float32)
         self.x_test = np.expand_dims(x_test, axis=-1).astype(np.float32)
@@ -83,7 +85,7 @@ class MNIST:
         preprocessing_model = self._build_preprocessing()
         dataset = dataset.map(
             map_func=lambda x, y: (preprocessing_model(x, training=False), y),
-            num_parallel_calls=tf.data.experimental.AUTOTUNE
+            num_parallel_calls=tf.data.experimental.AUTOTUNE,
         )
 
         if shuffle:
@@ -94,8 +96,11 @@ class MNIST:
         if augment:
             data_augmentation_model = self._build_data_augmentation()
             dataset = dataset.map(
-                map_func=lambda x, y: (data_augmentation_model(x, training=False), y),
-                num_parallel_calls=tf.data.experimental.AUTOTUNE
+                map_func=lambda x, y: (
+                    data_augmentation_model(x, training=False),
+                    y,
+                ),
+                num_parallel_calls=tf.data.experimental.AUTOTUNE,
             )
 
         return dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)

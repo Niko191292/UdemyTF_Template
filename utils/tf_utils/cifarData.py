@@ -1,11 +1,28 @@
+import requests
+
+
+requests.packages.urllib3.disable_warnings()
+import ssl
+
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    # Legacy Python that doesn't verify HTTPS certificates by default
+    pass
+else:
+    # Handle target environment that doesn't support HTTPS verification
+    ssl._create_default_https_context = _create_unverified_https_context
+
+
 from typing import Tuple
 
 import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.utils import to_categorical
+from keras.datasets import cifar10
+from keras.preprocessing.image import ImageDataGenerator
+from keras.utils import to_categorical
 
 
 np.random.seed(0)
@@ -13,14 +30,18 @@ tf.random.set_seed(0)
 
 
 class CIFAR10:
-    def __init__(self, with_normalization: bool = True, validation_size: float = 0.33) -> None:
+    def __init__(
+        self, with_normalization: bool = True, validation_size: float = 0.33
+    ) -> None:
         # User-definen constants
         self.num_classes = 10
         self.batch_size = 128
         # Load the data set
         (x_train, y_train), (x_test, y_test) = cifar10.load_data()
         # Split the dataset
-        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=validation_size)
+        x_train, x_val, y_train, y_val = train_test_split(
+            x_train, y_train, test_size=validation_size
+        )
         # Preprocess x data
         self.x_train = x_train.astype(np.float32)
         self.x_test = x_test.astype(np.float32)
@@ -58,7 +79,7 @@ class CIFAR10:
             rotation_range=5,
             zoom_range=0.08,
             width_shift_range=0.08,
-            height_shift_range=0.08
+            height_shift_range=0.08,
         )
         # Fit the data generator
         image_generator.fit(self.x_train, augment=True)
@@ -70,7 +91,7 @@ class CIFAR10:
             x_augmented,
             np.zeros(augment_size),
             batch_size=augment_size,
-            shuffle=False
+            shuffle=False,
         ).next()[0]
         # Append the augmented images to the train set
         self.x_train = np.concatenate((self.x_train, x_augmented))

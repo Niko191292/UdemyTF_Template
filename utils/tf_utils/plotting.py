@@ -77,11 +77,11 @@ def display_convergence_error(train_losses: list, valid_losses: list) -> None:
         Validation losses of the epochs
     """
     if len(valid_losses) > 0:
-        plt.plot(len(train_losses), train_losses, color="red")
-        plt.plot(len(valid_losses), valid_losses, color="blue")
+        plt.plot(range(len(train_losses)), train_losses, color="red")
+        plt.plot(range(len(valid_losses)), valid_losses, color="blue")
         plt.legend(["Train", "Valid"])
     else:
-        plt.plot(len(train_losses), train_losses, color="red")
+        plt.plot(range(len(train_losses)), train_losses, color="red")
         plt.legend(["Train"])
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
@@ -99,11 +99,11 @@ def display_convergence_acc(train_accs: list, valid_accs: list) -> None:
         Validation accuracies of the epochs.
     """
     if len(valid_accs) > 0:
-        plt.plot(len(train_accs), train_accs, color="red")
-        plt.plot(len(valid_accs), valid_accs, color="blue")
+        plt.plot(range(len(train_accs)), train_accs, color="red")
+        plt.plot(range(len(valid_accs)), valid_accs, color="blue")
         plt.legend(["Train", "Valid"])
     else:
-        plt.plot(len(train_accs), train_accs, color="red")
+        plt.plot(range(len(train_accs)), train_accs, color="red")
         plt.legend(["Train"])
     plt.xlabel("Epoch")
     plt.ylabel("Accuracy")
@@ -111,8 +111,7 @@ def display_convergence_acc(train_accs: list, valid_accs: list) -> None:
 
 
 def plot_to_image(fig: plt.figure) -> tf.Tensor:
-    """Plt plot/figure to tensorflow image.
-    """
+    """Plt plot/figure to tensorflow image."""
     buffer = io.BytesIO()
     plt.savefig(buffer, format="png")
     plt.close(fig)
@@ -125,8 +124,7 @@ def plot_to_image(fig: plt.figure) -> tf.Tensor:
 def plot_confusion_matrix(
     y_pred: np.ndarray, y_true: np.ndarray, classes_list: list
 ) -> plt.figure:
-    """Compute and create a plt.figure for the confusion matrix.
-    """
+    """Compute and create a plt.figure for the confusion matrix."""
     fig = plt.figure(figsize=(8, 8))
     cm = confusion_matrix(y_true, y_pred)
     plt.imshow(cm, interpolation="nearest", cmap=plt.cm.Blues)
@@ -163,8 +161,7 @@ def get_occlusion(
     step_size: int,
     model: tf.keras.models.Model,
 ) -> None:
-    """Plot the occlusion map for a classifier.
-    """
+    """Plot the occlusion map for a classifier."""
     rows, cols, depth = img.shape
     occulsion_map = np.full(shape=(rows, cols), fill_value=1.0)
     box = np.full(shape=(box_size, box_size, depth), fill_value=0.0)
@@ -173,10 +170,12 @@ def get_occlusion(
     for i in range(0, rows - box_size + 1, step_size):
         for j in range(0, cols - box_size + 1, step_size):
             img_with_box = img.copy()
-            img_with_box[i: i + box_size, j: j + box_size] = box
-            y_pred = model(img_with_box.reshape((1, rows, cols, depth)), training=False)[0]
+            img_with_box[i : i + box_size, j : j + box_size] = box
+            y_pred = model(
+                img_with_box.reshape((1, rows, cols, depth)), training=False
+            )[0]
             prob_right_class = y_pred[true_class_idx]
-            occulsion_map[i: i + step_size, j: j + step_size] = np.full(
+            occulsion_map[i : i + step_size, j : j + step_size] = np.full(
                 shape=(step_size, step_size), fill_value=prob_right_class
             )
 
@@ -188,12 +187,8 @@ def get_occlusion(
     plt.show()
 
 
-def get_heatmap(
-    img: np.ndarray,
-    model: tf.keras.models.Model
-) -> None:
-    """Plot the heatmap for a classifier.
-    """
+def get_heatmap(img: np.ndarray, model: tf.keras.models.Model) -> None:
+    """Plot the heatmap for a classifier."""
     rows, cols, depth = img.shape
     heatmap_layers = [
         layer for layer in model.layers if "heatmap" in layer.name
@@ -213,9 +208,7 @@ def get_heatmap(
 
         for filter_index, heatmap_filter in enumerate(heatmap[:num_subplots]):
             plt.subplot(subplot_shape[0], subplot_shape[1], filter_index + 1)
-            plt.title(
-                f"Filter: {filter_index + 1} of Layer: {layer_index}"
-            )
+            plt.title(f"Filter: {filter_index + 1} of Layer: {layer_index}")
             plt.imshow(heatmap_filter)
 
         plt.tight_layout()

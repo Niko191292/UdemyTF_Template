@@ -4,7 +4,6 @@ from setuptools import setup
 
 CLASSIFIERS = """\
 License :: OSI Approved
-Programming Language :: Python :: 3.7 :: or higher
 Topic :: Software Development
 Operating System :: Microsoft :: Windows
 Operating System :: POSIX
@@ -17,26 +16,22 @@ AUTHOR = "Nikolai Isken"
 DESCRIPTION = "Helper functions."
 
 MAJOR = 0
-MINOR = 1
+MINOR = 2
 MICRO = 0
 ISRELEASED = True
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
-
-PYTHON_MIN_VERSION = "3.7"
-PYTHON_MAX_VERSION = "3.8"
 
 metadata = dict(
     name=DISTNAME,
     version=VERSION,
     packages=["tf_utils"],
-    python_requires=">={},<={}".format(PYTHON_MIN_VERSION, PYTHON_MAX_VERSION),
     author=AUTHOR,
     description=DESCRIPTION,
-    classifiers=[CLASSIFIERS]
+    classifiers=[CLASSIFIERS],
 )
 
 
-def setup_package():
+def setup_package() -> None:
     setup(**metadata)
 
 

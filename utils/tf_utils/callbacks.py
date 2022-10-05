@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,8 +10,7 @@ from .plotting import plot_to_image
 
 
 class ImageCallback(tf.keras.callbacks.Callback):
-    """Custom tensorboard callback, to store images.
-    """
+    """Custom tensorboard callback, to store images."""
 
     def __init__(
         self,
@@ -38,7 +38,7 @@ class ImageCallback(tf.keras.callbacks.Callback):
         else:
             self.figure_title = figure_title
 
-    def on_epoch_end(self, epoch: int, logs: dict = None):
+    def on_epoch_end(self, epoch: int, logs: dict = None) -> None:
         y_pred_prob = self.model(self.x_test, training=False)
         y_pred = np.argmax(y_pred_prob, axis=1)
         y_true = np.argmax(self.y_test, axis=1)
@@ -52,8 +52,7 @@ class ImageCallback(tf.keras.callbacks.Callback):
 
 
 class ConfusionMatrix(ImageCallback):
-    """Custom tensorbard callback, to store the confusion matrix figure.
-    """
+    """Custom tensorbard callback, to store the confusion matrix figure."""
 
     def __init__(
         self,
@@ -75,7 +74,7 @@ class ConfusionMatrix(ImageCallback):
             figure_title=self.figure_title,
         )
 
-    def on_epoch_end(self, epoch: int, logs: dict = None):
+    def on_epoch_end(self, epoch: int, logs: dict = None) -> None:
         super().on_epoch_end(epoch, logs)
 
 
@@ -94,15 +93,15 @@ def schedule_fn2(epoch: int) -> float:
     if epoch < 10:
         return 1e-3
     else:
-        return 1e-3 * np.exp(0.1 * (10 - epoch))
+        return float(1e-3 * np.exp(0.1 * (10 - epoch)))
 
 
 def schedule_fn3(epoch: int) -> float:
-    return 1e-3 * np.exp(0.1 * (10 - epoch))
+    return float(1e-3 * np.exp(0.1 * (10 - epoch)))
 
 
 def schedule_fn4(epoch: int) -> float:
-    return 1e-3 * np.exp(0.05 * (10 - epoch))
+    return float(1e-3 * np.exp(0.05 * (10 - epoch)))
 
 
 def schedule_fn5(epoch: int) -> float:
@@ -119,9 +118,10 @@ def schedule_fn5(epoch: int) -> float:
 
 
 class LRTensorBoard(tf.keras.callbacks.TensorBoard):
-    def __init__(self, log_dir: str, **kwargs: dict) -> None:
+    def __init__(self, log_dir: str, **kwargs: Any) -> None:
         super().__init__(log_dir=log_dir, **kwargs)
 
     def on_epoch_end(self, epoch: int, logs: dict) -> None:
-        logs.update({"learning_rate": self.model.optimizer.learning_rate.numpy()})
+        logs.update(
+            {"learning_rate": self.model.optimizer.learning_rate.numpy()})
         super().on_epoch_end(epoch, logs)

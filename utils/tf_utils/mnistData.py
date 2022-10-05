@@ -3,9 +3,9 @@ from typing import Tuple
 import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.datasets import mnist
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.utils import to_categorical
+from keras.datasets import mnist
+from keras.preprocessing.image import ImageDataGenerator
+from keras.utils import to_categorical
 
 
 np.random.seed(0)
@@ -49,11 +49,12 @@ class MNIST:
         return self.x_test, self.y_test
 
     def get_splitted_train_validation_set(self, validation_size: float = 0.33) -> tuple:
-        self.x_train_, self.x_val_, self.y_train_, self.y_val_ = train_test_split(
-            self.x_train,
-            self.y_train,
-            test_size=validation_size
-        )
+        (
+            self.x_train_,
+            self.x_val_,
+            self.y_train_,
+            self.y_val_,
+        ) = train_test_split(self.x_train, self.y_train, test_size=validation_size)
         self.val_size = self.x_val_.shape[0]
         self.train_splitted_size = self.x_train_.shape[0]
         return self.x_train_, self.x_val_, self.y_train_, self.y_val_
@@ -63,7 +64,7 @@ class MNIST:
             rotation_range=5,
             zoom_range=0.08,
             width_shift_range=0.08,
-            height_shift_range=0.08
+            height_shift_range=0.08,
         )
         # Fit the data generator
         image_generator.fit(self.x_train, augment=True)
@@ -75,7 +76,7 @@ class MNIST:
             x_augmented,
             np.zeros(augment_size),
             batch_size=augment_size,
-            shuffle=False
+            shuffle=False,
         ).next()[0]
         # Append the augmented images to the train set
         self.x_train = np.concatenate((self.x_train, x_augmented))

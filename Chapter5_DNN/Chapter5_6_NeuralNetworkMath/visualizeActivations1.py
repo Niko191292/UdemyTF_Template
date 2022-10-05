@@ -10,10 +10,10 @@ def relu(x: float) -> float:
 
 
 def sigmoid(x: float) -> float:
-    return 1 / (1 + np.exp(-x))
+    return float(1 / (1 + np.exp(-x)))
 
 
-if __name__ == "__main__":
+def main() -> None:
     # y = ReLU(wx + b)
     # y = sigmoid(wx + b)
     # shift = -b/w
@@ -31,3 +31,7 @@ if __name__ == "__main__":
     plt.plot(x, y, color="blue")
     plt.plot(x, y_act, color="red")
     plt.show()
+
+
+if __name__ == "__main__":
+    main()

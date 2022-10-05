@@ -12,9 +12,15 @@ matplotlib
 pandas
 opencv-python
 pyqt5
+xlrd
+openpyxl
+optuna
+gym==0.17.*
 
 # Linting/Tooling
 flake8
 mypy
 isort
+black
+pre-commit
 autopep8
