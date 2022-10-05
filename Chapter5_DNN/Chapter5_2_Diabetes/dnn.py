@@ -64,7 +64,7 @@ def main() -> None:
     model.fit(
         x=x_train,
         y=y_train,
-        epochs=3_000,
+        epochs=3_00,
         batch_size=128,
         verbose=1,
         validation_data=(x_test, y_test))
