@@ -9,7 +9,7 @@ from keras.utils import to_categorical
 from keras.preprocessing.image import ImageDataGenerator
 
 
-DATA_DIR = os.path.join("C:/Users/Jan/Documents/DogsAndCats")
+DATA_DIR = os.path.join("C:/Users/nikol/Documents/kagglecatsanddogs_5340")
 X_FILE_PATH = os.path.join(DATA_DIR, "x.npy")
 Y_FILE_PATH = os.path.join(DATA_DIR, "y.npy")
 IMG_SIZE = 64
