@@ -10,6 +10,7 @@
 *.v2
 *.pb
 *.profile-empty
+Chapter9_AdvancedDL/Chapter9_1_CustomDataset/kagglecatsanddogs_5340/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
