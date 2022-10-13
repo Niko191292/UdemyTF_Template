@@ -1,12 +1,12 @@
 import numpy as np
-from tensorflow.keras.datasets import mnist
-from tensorflow.keras.initializers import Constant
-from tensorflow.keras.initializers import TruncatedNormal
-from tensorflow.keras.layers import Activation
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.optimizers import Adam
+from keras.initializers import Constant
+from keras.initializers import TruncatedNormal
+from keras.datasets import mnist
+from keras.layers import Activation
+from keras.layers import Dense
+from keras.models import Sequential
+from keras.utils import to_categorical
+from keras.optimizers import Adam
 
 
 def prepare_dataset(num_features: int, num_targets: int):
@@ -56,15 +56,15 @@ if __name__ == "__main__":
 
     (x_train, y_train), (x_test, y_test) = prepare_dataset(num_features, num_targets)
 
-    model = build_model(num_features=num_features, num_targets=num_targets) # 1 Model erstellen
+    model = build_model(num_features=num_features, num_targets=num_targets)  # 1 Model erstellen
 
-    model.compile( # 2 Compiling
-        loss="categorical_crossentropy", # Für mehr als zwei Klassen
+    model.compile(  # 2 Compiling
+        loss="categorical_crossentropy",  # Für mehr als zwei Klassen
         optimizer=Adam(learning_rate=0.0005),
         metrics=["accuracy"]
     )
 
-    model.fit( # 3 Training durchführen
+    model.fit(  # 3 Training durchführen
         x=x_train,
         y=y_train,
         epochs=5,
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         validation_data=(x_test, y_test)
     )
 
-    scores = model.evaluate( # 4 Model testen
+    scores = model.evaluate(  # 4 Model testen
         x=x_test,
         y=y_test,
         verbose=0

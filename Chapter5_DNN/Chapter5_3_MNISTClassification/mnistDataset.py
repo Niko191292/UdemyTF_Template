@@ -1,4 +1,4 @@
-from tensorflow.keras.datasets import mnist
+from keras.datasets import mnist
 
 from tf_utils.plotting import display_digit
 

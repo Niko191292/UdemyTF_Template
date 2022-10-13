@@ -35,22 +35,16 @@ def get_dataset() -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.n
     return (x_train, y_train), (x_test, y_test)
 
 
-def build_model() -> Sequential:
-    '''
-    Funktion ist zum modellieren des Modells zuständig.
-
-    Returns:
-        Sequential: Squenzielles Modell wird zurückgegeben.
-    '''
+def build_model(num_features: int, num_targets: int) -> Sequential:
     model = Sequential()
-
+    model.add(Dense(units=20, input_shape=(num_features,)))
+    model.add(Activation("relu"))
+    model.add(Dense(units=num_targets))
+    model.summary()
     return model
 
 
 def main() -> None:
-    '''
-    Hauptfunktion, die bei beginn gestartet wird.
-    '''
     (x_train, y_train), (x_test, y_test) = get_dataset()
 
     print(f"x_train: {x_train}")
@@ -58,16 +52,27 @@ def main() -> None:
     print(f"x_test: {x_test}")
     print(f"y_test: {y_test}")
 
-    model = build_model()
-    opt = Adam(learning_rate=0.01)
+    num_features = x_train.shape[1]
+    num_targets = y_train.shape[1]
+
+    print(f"num_features: {num_features}")
+    print(f"num_targets: {num_targets}")
+
+    model = build_model(num_features, num_targets)
+    opt = Adam(learning_rate=0.001)
     model.compile(loss="mse", optimizer=opt, metrics=[r_squared])
     model.fit(
         x=x_train,
         y=y_train,
-        epochs=3_00,
+        epochs=3_000,
         batch_size=128,
         verbose=1,
-        validation_data=(x_test, y_test))
+        validation_data=(x_test, y_test)
+    )
+
+    scores = model.evaluate(x=x_test, y=y_test)
+
+    print(f"Scores: {scores}")
 
 
 if __name__ == "__main__":

@@ -1,20 +1,20 @@
 import os
 import numpy as np
-from tensorflow.keras.callbacks import TensorBoard
-from tensorflow.keras.datasets import mnist
-from tensorflow.keras.initializers import Constant
-from tensorflow.keras.initializers import TruncatedNormal
-from tensorflow.keras.layers import Activation
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.optimizers import Adam
+import tensorflow as tf
+from keras.callbacks import TensorBoard
+from keras.datasets import mnist
+from keras.layers import Activation
+from keras.layers import Dense
+from keras.models import Sequential
+from keras.utils import to_categorical
+from keras.optimizers import Adam
 
-MODELS_DIR = os.path.abspath("C:/Users/nikol/UdemyTF_Template/models")
+MODELS_DIR = os.path.abspath("C:/Users/nikol/Masterthesis_SOH_Parameter_Modell/UdemyTF_Template/models")
+print(MODELS_DIR)
 if not os.path.exists(MODELS_DIR):
     os.mkdir(MODELS_DIR)
 MODEL_FILE_PATH = os.path.join(MODELS_DIR, "mnist_model.h5")
-LOGS_DIR = os.path.abspath("C:/Users/nikol/UdemyTF_Template/logs")
+LOGS_DIR = os.path.abspath("C:/Users/nikol/Masterthesis_SOH_Parameter_Modell/UdemyTF_Template/logs")
 if not os.path.exists(MODELS_DIR):
     os.mkdir(MODELS_DIR)
 MODEL_LOG_DIR = os.path.join(LOGS_DIR, "mnist_model_log")
@@ -38,8 +38,8 @@ def prepare_dataset(num_features: int, num_targets: int):
 
 
 def build_model(num_features: int, num_targets: int) -> Sequential:
-    init_w = TruncatedNormal(mean=0.0, stddev=0.01)
-    init_b = Constant(value=0.0)
+    init_w = tf.keras.initializers.TruncatedNormal(mean=0.0, stddev=0.01)
+    init_b = tf.keras.initializers.Constant(value=0.0)
 
     model = Sequential()
     # 1 Hidden Layer
@@ -67,11 +67,13 @@ if __name__ == "__main__":
 
     (x_train, y_train), (x_test, y_test) = prepare_dataset(num_features, num_targets)
 
-    model = build_model(num_features=num_features, num_targets=num_targets) # 1 Model erstellen
+    model = build_model(num_features=num_features, num_targets=num_targets)  # 1 Model erstellen
 
-    model.compile( # 2 Compiling
-        loss="categorical_crossentropy", # Für mehr als zwei Klassen
-        optimizer=Adam(learning_rate=0.0005),
+    model.load_weights(MODEL_FILE_PATH)
+
+    model.compile(  # 2 Compiling
+        loss="categorical_crossentropy",  # Für mehr als zwei Klassen
+        optimizer=Adam(learning_rate=0.002),
         metrics=["accuracy"]
     )
 
@@ -81,7 +83,7 @@ if __name__ == "__main__":
         write_graph=True
     )
 
-    model.fit( # 3 Training durchführen
+    model.fit(  # 3 Training durchführen
         x=x_train,
         y=y_train,
         epochs=5,
@@ -91,10 +93,12 @@ if __name__ == "__main__":
         callbacks=[tb_callback]
     )
 
-    scores = model.evaluate( # 4 Model testen
+    scores = model.evaluate(  # 4 Model testen
         x=x_test,
         y=y_test,
         verbose=0
     )
 
     print(f"Scores before saving: {scores}")
+
+    model.save_weights(MODEL_FILE_PATH)

@@ -2,20 +2,19 @@
 import os
 
 import numpy as np
-from tensorflow.keras.datasets import mnist
-from tensorflow.keras.initializers import Constant
-from tensorflow.keras.initializers import TruncatedNormal
-from tensorflow.keras.layers import Activation
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.utils import to_categorical
+from keras.datasets import mnist
+import tensorflow as tf
+from keras.layers import Activation
+from keras.layers import Dense
+from keras.models import Sequential
+from keras.optimizers import Adam
+from keras.utils import to_categorical
 
 
 FILE_PATH = os.path.abspath(__file__)
 PROJECT_DIR = os.path.dirname(os.path.dirname(FILE_PATH))
 MODEL_FILE_PATH = os.path.join(
-    PROJECT_DIR, "resources", "weights", "dnn_mnist.h5"
+    PROJECT_DIR, "ressources", "weights", "dnn_mnist.h5"
 )
 
 
@@ -37,8 +36,8 @@ def prepare_dataset(num_features: int, num_targets: int) -> tuple:
 
 
 def build_model(num_features: int, num_targets: int) -> Sequential:
-    init_w = TruncatedNormal(mean=0.0, stddev=0.01)
-    init_b = Constant(value=0.0)
+    init_w = tf.keras.initializers.TruncatedNormal(mean=0.0, stddev=0.01)
+    init_b = tf.keras.initializers.Constant(value=0.0)
 
     model = Sequential()
     model.add(

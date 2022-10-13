@@ -1,9 +1,8 @@
 import os
 import numpy as np
+import tensorflow as tf
 from keras.callbacks import TensorBoard
 from keras.datasets import mnist
-from keras.initializers import Constant
-from keras.initializers import TruncatedNormal
 from keras.layers import Activation
 from keras.layers import Dense
 from keras.models import Sequential
@@ -13,11 +12,11 @@ from keras.utils import to_categorical
 from tf_utils.callbacks import ConfusionMatrix
 
 
-MODEL_DIR = os.path.abspath("C:/Users/jan/OneDrive/_Coding/UdemyTF/models")
+MODEL_DIR = os.path.abspath("C:/Users/nikol/Masterthesis_SOH_Parameter_Modell/UdemyTF_Template/models")
 if not os.path.exists(MODEL_DIR):
     os.mkdir(MODEL_DIR)
 MODEL_FILE_PATH = os.path.join(MODEL_DIR, "mnist_model.h5")
-LOGS_DIR = os.path.abspath("C:/Users/jan/OneDrive/_Coding/UdemyTF/logs/")
+LOGS_DIR = os.path.abspath("C:/Users/nikol/Masterthesis_SOH_Parameter_Modell/UdemyTF_Template/logs")
 if not os.path.exists(LOGS_DIR):
     os.mkdir(LOGS_DIR)
 MODEL_LOG_DIR = os.path.join(LOGS_DIR, "mnist_cm")
@@ -36,8 +35,8 @@ def prepare_dataset(num_features: int, num_classes: int) -> tuple:
 
 
 def build_model(num_features: int, num_classes: int) -> Sequential:
-    init_w = TruncatedNormal(mean=0.0, stddev=0.01)
-    init_b = Constant(value=0.0)
+    init_w = tf.keras.initializers.TruncatedNormal(mean=0.0, stddev=0.01)
+    init_b = tf.keras.initializers.Constant(value=0.0)
 
     model = Sequential()
     model.add(
@@ -83,7 +82,7 @@ if __name__ == "__main__":
     )
 
     optimizer = Adam(learning_rate=0.001)
-    epochs = 2
+    epochs = 5
     batch_size = 256
 
     model = build_model(num_features, num_classes)

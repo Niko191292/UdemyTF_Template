@@ -12,8 +12,9 @@ from keras.models import Sequential
 from keras.optimizers import Adam
 
 
-LOGS_DIR = os.path.abspath("C:/Users/nikol/UdemyTF_Template/logs/computation")
+LOGS_DIR = os.path.abspath("C:/Users/nikol/Masterthesis_SOH_Parameter_Modell/UdemyTF_Template/logs")
 MODEL_LOG_DIR = os.path.join(LOGS_DIR, "gradient_model")
+print(os.getcwd())
 
 
 def get_dataset() -> Tuple[np.ndarray, np.ndarray]:

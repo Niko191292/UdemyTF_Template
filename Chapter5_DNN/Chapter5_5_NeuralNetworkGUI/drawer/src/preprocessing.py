@@ -40,7 +40,7 @@ def center(image: np.ndarray) -> np.ndarray:
 def get_image(DrawingFrame: Any, debug: bool = False) -> np.ndarray:
     pixmap = DrawingFrame.grab()
     temp_image_file_path = os.path.join(
-        PROJECT_DIR, "resources", "imgs", "temp_image.jpg"
+        PROJECT_DIR, "ressources", "imgs", "temp_image.jpg"
     )
     pixmap.save(temp_image_file_path)
     image = load(temp_image_file_path)

@@ -1,13 +1,13 @@
 import os
 import numpy as np
-from tensorflow.keras.datasets import mnist
-from tensorflow.keras.initializers import Constant
-from tensorflow.keras.initializers import TruncatedNormal
-from tensorflow.keras.layers import Activation
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.optimizers import Adam
+from keras.datasets import mnist
+from keras.initializers import Constant
+from keras.initializers import TruncatedNormal
+from keras.layers import Activation
+from keras.layers import Dense
+from keras.models import Sequential
+from keras.utils import to_categorical
+from keras.optimizers import Adam
 
 MODELS_DIR = os.path.abspath("C:/Users/nikol/UdemyTF_Template/models")
 MODEL_FILE_PATH = os.path.join(MODELS_DIR, "mnist_model.h5")
