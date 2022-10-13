@@ -1,8 +1,3 @@
-# TensorFlow Libraries
-tensorflow
-tensorflow-datasets
-tensorflow-addons
-
 # Other Libraries
 scikit-learn
 scipy
