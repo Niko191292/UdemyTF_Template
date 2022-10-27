@@ -40,19 +40,10 @@ def build_model(num_features: int, num_classes: int) -> Sequential:
         )
     )
     model.add(Activation("relu"))
-    model.add(
-        Dense(
-            units=128,
-            input_shape=(num_features,)
-        )
-    )
+    model.add(Dense(units=128, input_shape=(num_features,)))
     model.add(Activation("relu"))
-    model.add(
-        Dense(
-            units=64,
-            input_shape=(num_features,)
-        )
-    )
+    model.add(Dense(units=64, input_shape=(num_features,)))
+
     model.add(Activation("relu"))
     model.add(
         Dense(

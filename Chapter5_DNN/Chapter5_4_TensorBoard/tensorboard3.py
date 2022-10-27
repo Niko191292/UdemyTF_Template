@@ -48,25 +48,14 @@ def build_model(num_features: int, num_classes: int) -> Sequential:
         )
     )
     model.add(Activation("relu"))
-    model.add(
-        Dense(units=300, kernel_initializer=init_w, bias_initializer=init_b)
-    )
+    model.add(Dense(units=300, kernel_initializer=init_w, bias_initializer=init_b))
     model.add(Activation("relu"))
-    model.add(
-        Dense(units=100, kernel_initializer=init_w, bias_initializer=init_b)
-    )
+    model.add(Dense(units=100, kernel_initializer=init_w, bias_initializer=init_b))
     model.add(Activation("relu"))
-    model.add(
-        Dense(units=50, kernel_initializer=init_w, bias_initializer=init_b)
-    )
+    model.add(Dense(units=50, kernel_initializer=init_w, bias_initializer=init_b))
     model.add(Activation("relu"))
-    model.add(
-        Dense(
-            units=num_classes,
-            kernel_initializer=init_w,
-            bias_initializer=init_b,
-        )
-    )
+    model.add(Dense(units=num_classes, kernel_initializer=init_w, bias_initializer=init_b,)
+              )
     model.add(Activation("softmax"))
     model.summary()
 

@@ -3,20 +3,14 @@ import os
 import cv2
 import numpy as np
 import tensorflow as tf
-from skimage import transform
-from sklearn.model_selection import train_test_split
-from keras.layers.experimental.preprocessing import RandomRotation
-from keras.layers.experimental.preprocessing import RandomTranslation
-from keras.layers.experimental.preprocessing import RandomZoom
+from keras.layers import (RandomRotation, RandomTranslation, RandomZoom,
+                          Rescaling)
 from keras.models import Sequential
 from keras.utils import to_categorical
+from skimage import transform
+from sklearn.model_selection import train_test_split
 
-
-np.random.seed(0)
-tf.random.set_seed(0)
-
-
-DATA_DIR = os.path.join("C:/Users/Jan/Documents/DogsAndCats")
+DATA_DIR = os.path.join("C:/Users/nikol/Documents/kagglecatsanddogs_5340/PetImages")
 X_FILE_PATH = os.path.join(DATA_DIR, "x.npy")
 Y_FILE_PATH = os.path.join(DATA_DIR, "y.npy")
 IMG_SIZE = 64
@@ -41,9 +35,14 @@ def extract_cats_vs_dogs() -> None:
     num_dogs = len(os.listdir(dogs_dir))
     num_images = num_cats + num_dogs
 
-    x = np.zeros(shape=(num_images, IMG_SIZE, IMG_SIZE,
-                 IMG_DEPTH), dtype=np.float32)
-    y = np.zeros(shape=(num_images,), dtype=np.float32)
+    x = np.zeros(
+        shape=(num_images, IMG_SIZE, IMG_SIZE, IMG_DEPTH),
+        dtype=np.float32
+    )
+    y = np.zeros(
+        shape=(num_images,),
+        dtype=np.float32
+    )
 
     cnt = 0
     for d, class_name in zip(dirs, class_names):
@@ -52,7 +51,10 @@ def extract_cats_vs_dogs() -> None:
             try:
                 img = cv2.imread(img_file_path, cv2.IMREAD_COLOR)
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                x[cnt] = transform.resize(image=img, output_shape=IMG_SHAPE)
+                x[cnt] = transform.resize(
+                    image=img,
+                    output_shape=IMG_SHAPE
+                )
                 if class_name == "cat":
                     y[cnt] = 0
                 elif class_name == "dog":
@@ -61,7 +63,7 @@ def extract_cats_vs_dogs() -> None:
                     print("Invalid class name!")
                 cnt += 1
             except:  # noqa: E722
-                print(f"Image {f} cannt be read!")
+                print(f"Image {f} cant be read!")
                 os.remove(img_file_path)
 
     # Dropping not readable image idxs
@@ -75,17 +77,14 @@ def extract_cats_vs_dogs() -> None:
 class DOGSCATS:
     def __init__(self, test_size: float = 0.2, validation_size: float = 0.33) -> None:
         # User-definen constants
-        self.num_classes = 2
+        self.num_classes = 10
         self.batch_size = 128
         # Load the data set
         x = np.load(X_FILE_PATH)
         y = np.load(Y_FILE_PATH)
         # Split the dataset
-        x_train, x_test, y_train, y_test = train_test_split(
-            x, y, test_size=test_size)
-        x_train, x_val, y_train, y_val = train_test_split(
-            x_train, y_train, test_size=validation_size
-        )
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size)
+        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=validation_size)
         # Preprocess x data
         self.x_train = x_train.astype(np.float32)
         self.x_test = x_test.astype(np.float32)
@@ -103,14 +102,10 @@ class DOGSCATS:
         self.depth = self.x_train.shape[3]
         self.img_shape = (self.width, self.height, self.depth)
         # tf.data Datasets
-        self.train_dataset = tf.data.Dataset.from_tensor_slices(
-            (self.x_train, self.y_train))
-        self.test_dataset = tf.data.Dataset.from_tensor_slices(
-            (self.x_test, self.y_test))
-        self.val_dataset = tf.data.Dataset.from_tensor_slices(
-            (self.x_val, self.y_val))
-        self.train_dataset = self._prepare_dataset(
-            self.train_dataset, shuffle=True, augment=True)
+        self.train_dataset = tf.data.Dataset.from_tensor_slices((self.x_train, self.y_train))
+        self.test_dataset = tf.data.Dataset.from_tensor_slices((self.x_test, self.y_test))
+        self.val_dataset = tf.data.Dataset.from_tensor_slices((self.x_val, self.y_val))
+        self.train_dataset = self._prepare_dataset(self.train_dataset, shuffle=True, augment=True)
         self.test_dataset = self._prepare_dataset(self.test_dataset)
         self.val_dataset = self._prepare_dataset(self.val_dataset)
 
@@ -122,13 +117,6 @@ class DOGSCATS:
 
     def get_val_set(self) -> tf.data.Dataset:
         return self.val_dataset
-
-    @staticmethod
-    def load_and_preprocess_custom_image(image_file_path: str) -> np.ndarray:
-        img = cv2.imread(image_file_path, cv2.IMREAD_COLOR)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img = transform.resize(image=img, output_shape=IMG_SHAPE)
-        return img
 
     @staticmethod
     def _build_data_augmentation() -> Sequential:
@@ -144,7 +132,7 @@ class DOGSCATS:
         self,
         dataset: tf.data.Dataset,
         shuffle: bool = False,
-        augment: bool = False,
+        augment: bool = False
     ) -> tf.data.Dataset:
         if shuffle:
             dataset = dataset.shuffle(buffer_size=1_000)
@@ -154,11 +142,8 @@ class DOGSCATS:
         if augment:
             data_augmentation_model = self._build_data_augmentation()
             dataset = dataset.map(
-                map_func=lambda x, y: (
-                    data_augmentation_model(x, training=False),
-                    y,
-                ),
-                num_parallel_calls=tf.data.experimental.AUTOTUNE,
+                map_func=lambda x, y: (data_augmentation_model(x, training=False), y),
+                num_parallel_calls=tf.data.experimental.AUTOTUNE
             )
 
         return dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
@@ -166,4 +151,5 @@ class DOGSCATS:
 
 if __name__ == "__main__":
     # extract_cats_vs_dogs()
-    pass
+
+    data = DOGSCATS()
