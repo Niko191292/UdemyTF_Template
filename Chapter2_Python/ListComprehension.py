@@ -9,7 +9,7 @@ for i in range(10):
 print(my_list)
 
 
-# List Comprehension
+# List Comprehensio
 my_list2 = [i for i in range(10)]
 print(my_list2)
 
