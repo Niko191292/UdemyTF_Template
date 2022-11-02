@@ -1,8 +1,8 @@
 import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.datasets import boston_housing
-from tensorflow.keras.layers.experimental.preprocessing import Normalization
+from keras.datasets import boston_housing
+from keras.layers import Normalization
 
 
 np.random.seed(0)

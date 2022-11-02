@@ -4,8 +4,8 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from tensorcross.utils import dataset_split
-from tensorflow.keras.layers import TextVectorization
-from tensorflow.keras.models import Sequential
+from keras.layers import TextVectorization
+from  keras.models import Sequential
 
 
 np.random.seed(0)
